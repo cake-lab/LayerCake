@@ -1,0 +1,85 @@
+syntax = "proto2";
+
+package inference_service;
+
+service Inference {
+  rpc Infer (InferenceRequest) returns (InferenceResponse){}
+  rpc Infer1 (Message1) returns (InferenceResponse){} // Basic inference
+  rpc Infer2 (Message2) returns (InferenceResponse){} // INFaaS-esque
+  rpc Infer3 (Message3) returns (Endpoints){} //
+  rpc BandwidthMeasurement (BandwidthMeasurementMessage) returns (BandwidthMeasurementMessage){}
+}
+
+message InferenceRequest {
+  enum RequestType {
+    INFO = 0;
+    SUBMISSION = 1;
+  }
+  required RequestType type = 1;
+  repeated string model_name = 2; // We can have multiple models being requested
+  repeated string data = 3; // Base64 encoded data, if any is being sent
+  optional string flags = 4; // In case we want to inform the system what responses to toss or transfer
+}
+
+message InferenceResponse {
+  repeated string response = 1; // Will likely contain json with either timing information or response information
+  optional EndpointInformation endpoint = 2;
+
+  required ServerMetadata metadata = 3;
+}
+
+enum Application {
+  IMAGE = 0;
+  TEXT = 1;
+}
+enum SLOType {
+  ACCURACY = 0;
+  LATENCY = 1;
+}
+
+message Message1 {
+  // This message contains an explicit model we want to use
+
+  required Application application = 1;
+  required string model_name = 2;
+  required string data = 3;
+}
+
+message Message2 {
+  // This message contains the parameters of our target
+  required Application application = 1;
+  required SLOType slo_type = 2;
+  required double slo_value = 3;
+  required string data = 4;
+}
+
+message Message3 {
+  // This message might not send data, if we are using the end-device potentially
+  required Application application = 1;
+  required double accuracy_slo = 2;
+  required double latency_slo = 3;
+  optional string data = 4;
+}
+
+message Endpoints {
+  repeated EndpointInformation endpoints = 1;
+  required ServerMetadata metadata = 2;
+}
+
+message EndpointInformation {
+  required string model_name = 1;
+  required string endpoint_name = 2;
+  required double accuracy = 3;
+  required double latency = 4;
+  optional int32 dimensions = 5;
+  required Application application = 6;
+  optional double load_ratio = 7; // How many requests per machine are there -- won't include yet
+}
+
+message BandwidthMeasurementMessage {
+  optional string data = 1;
+}
+
+message ServerMetadata {
+  required double processing_latency = 1;
+}
