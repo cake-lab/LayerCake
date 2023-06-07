@@ -51,7 +51,7 @@ class RemoteWrangler {
     val stub: InferenceGrpc.InferenceBlockingStub = InferenceGrpc.newBlockingStub(channel)
 
     // SageMakerDirect
-    val credentials : AWSCredentials = BasicAWSCredentials("AKIATWIRQCVEIIODPRNN", "FfxO7g9VQBSlYINJkEq6ERlb3mFGgys7FNvqePIM")
+    val credentials : AWSCredentials = ; // TODO: your credentials here
     //val sagemakerclient : AmazonSageMakerRuntimeClient = AmazonSageMakerRuntimeClient(credentials) // todo: credentials
     val sagemakerclient : AmazonSageMakerRuntimeAsyncClient = AmazonSageMakerRuntimeAsyncClient(credentials) // todo: credentials
 
