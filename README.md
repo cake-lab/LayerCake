@@ -32,6 +32,8 @@ By doing so, LayerCake achieves latency targets in up to 96.4% of cases, which i
 }
 ```
 
+Note: This citation may change upon the official release of CCGRID'23 proceedings.
+
 ## Acknowledgements
 
 We thank the anonymous reviewers for their constructive reviews. 
